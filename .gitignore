@@ -1,0 +1,6 @@
+player1/*.o
+player1/player1
+player2/*.o
+player2/player2
+*.iml
+
