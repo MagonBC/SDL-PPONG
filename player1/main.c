@@ -225,6 +225,8 @@ int main(int argc, char *argv[])
     game.table.rack1.position.x= rack1_x;
     
     /* display the graphic items */
+    free_video_memory(&game);
+    create_game_graphicItems(&game);
     display(&game);
     
     /* handles RPC requests asynchronously instead of using svc_run(). */

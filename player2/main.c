@@ -228,6 +228,8 @@ while(play)
         game.table.rack1.position.x = (*result);
     
     /* display the graphic items */
+    free_video_memory(&game);
+    create_game_graphicItems(&game);
     display(&game);
     
     /* handles RPC requests asynchronously instead of using svc_run(). */
