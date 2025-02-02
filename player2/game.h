@@ -4,8 +4,8 @@
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_mixer.h>
 
-#define RSPEED        5   
-#define BSPEED        8 
+#define RSPEED        10
+#define BSPEED        5 
 #define VOLUME      100 	/* Volume 0..128 */
 
 typedef struct GraphicItem

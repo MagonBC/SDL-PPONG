@@ -7,5 +7,7 @@
 program PLAYER2PROG {
         version PLAYER2VERS {
                 int LAUNCHBALLP2(void) = 1;
+                int GETRACK2(int) = 2;
         } = 1;
 } = 0x3FFFFFFF;
+
