@@ -189,10 +189,14 @@ int main(int argc, char *argv[])
                          /* launch the ball: trigger the timer */
 			 case SDLK_SPACE:
                              
-                             if((game.table.ball.position.y +
+                             if(((game.table.ball.position.y +
                                  game.table.ball.surface->h)
                                 == game.table.paddle1.position.y
-                               )
+                               ) ||
+                        ((game.table.ball.position.y ==
+                                                         (game.table.paddle2.position.y +
+                                                         game.table.paddle2.surface->h)
+                                                       )) && play_with_computer == 1)
                              {
                                 /* First, launch the ball on player2 side */
                                 if (play_with_computer == 0){
