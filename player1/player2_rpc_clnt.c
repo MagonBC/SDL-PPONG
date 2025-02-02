@@ -9,17 +9,21 @@
 /* Default timeout can be changed using clnt_control() */
 static struct timeval TIMEOUT = { 25, 0 };
 
-int *
-launchballp2_1(void *argp, CLIENT *clnt)
+enum clnt_stat 
+launchballp2_1(void *argp, int *clnt_res, CLIENT *clnt)
 {
-	static int clnt_res;
-
-	memset((char *)&clnt_res, 0, sizeof(clnt_res));
-	if (clnt_call (clnt, LAUNCHBALLP2,
-		(xdrproc_t) xdr_void, (caddr_t) argp,
-		(xdrproc_t) xdr_int, (caddr_t) &clnt_res,
-		TIMEOUT) != RPC_SUCCESS) {
-		return (NULL);
-	}
-	return (&clnt_res);
+        return (clnt_call(clnt, LAUNCHBALLP2,
+                (xdrproc_t) xdr_void, (caddr_t) argp,
+                (xdrproc_t) xdr_int, (caddr_t) clnt_res,
+                TIMEOUT));
 }
+
+enum clnt_stat 
+getrack2_1(int *argp, int *clnt_res, CLIENT *clnt)
+{
+        return (clnt_call(clnt, GETRACK2,
+                (xdrproc_t) xdr_int, (caddr_t) argp,
+                (xdrproc_t) xdr_int, (caddr_t) clnt_res,
+                TIMEOUT));
+}
+

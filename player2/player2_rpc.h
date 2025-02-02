@@ -8,6 +8,7 @@
 
 #include <rpc/rpc.h>
 
+#include <pthread.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,14 +20,20 @@ extern "C" {
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define LAUNCHBALLP2 1
-extern  int * launchballp2_1(void *, CLIENT *);
-extern  int * launchballp2_1_svc(void *, struct svc_req *);
+extern  enum clnt_stat launchballp2_1(void *, int *, CLIENT *);
+extern  bool_t launchballp2_1_svc(void *, int *, struct svc_req *);
+#define GETRACK2 2
+extern  enum clnt_stat getrack2_1(int *, int *, CLIENT *);
+extern  bool_t getrack2_1_svc(int *, int *, struct svc_req *);
 extern int player2prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
 #define LAUNCHBALLP2 1
-extern  int * launchballp2_1();
-extern  int * launchballp2_1_svc();
+extern  enum clnt_stat launchballp2_1();
+extern  bool_t launchballp2_1_svc();
+#define GETRACK2 2
+extern  enum clnt_stat getrack2_1();
+extern  bool_t getrack2_1_svc();
 extern int player2prog_1_freeresult ();
 #endif /* K&R C */
 

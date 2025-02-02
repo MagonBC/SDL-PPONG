@@ -11,20 +11,45 @@
 extern SDL_TimerID timer;
 extern PPong_Game game;
 
-int *
-launchballp2_1_svc(void *argp, struct svc_req *rqstp)
+bool_t
+launchballp2_1_svc(void *argp, int *result, struct svc_req *rqstp)
 {
-	static int  tmr;
+  bool_t retval;
 
   SDL_RemoveTimer(timer);
-                                            
-  timer = SDL_AddTimer(BSPEED, MoveBall, &game);  
-  
-    if(timer)
-        tmr = 1;
-    else
-        tmr = 0; 
 
-	return &tmr;
+  timer = SDL_AddTimer(BSPEED, MoveBall, &game);
+
+    if(timer)
+        retval = 1;
+    else
+        retval = 0;
+
+  //return retval;
+  return 1;
 }
 
+bool_t
+getrack2_1_svc(int *argp, int *result, struct svc_req *rqstp)
+{
+    bool_t retval=1;
+
+    (*result) = (int)(game.table.rack2.position.x);
+
+    if(argp != NULL)
+        game.table.rack1.position.x = (*argp);
+
+    return retval;
+}
+
+int
+player2prog_1_freeresult (SVCXPRT *transp, xdrproc_t xdr_result, caddr_t result)
+{
+	xdr_free (xdr_result, result);
+
+	/*
+	 * Insert additional freeing code here, if needed
+	 */
+
+	return 1;
+}

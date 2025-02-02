@@ -16,17 +16,19 @@
 #define SIG_PF void(*)(int)
 #endif
 
-int register_player1_service();
-
 static void
 player2prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		int fill;
+		int getrack2_1_arg;
 	} argument;
-	char *result;
+	union {
+		int launchballp2_1_res;
+		int getrack2_1_res;
+	} result;
+	bool_t retval;
 	xdrproc_t _xdr_argument, _xdr_result;
-	char *(*local)(char *, struct svc_req *);
+	bool_t (*local)(char *, void *, struct svc_req *);
 
 	switch (rqstp->rq_proc) {
 	case NULLPROC:
@@ -36,7 +38,13 @@ player2prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	case LAUNCHBALLP2:
 		_xdr_argument = (xdrproc_t) xdr_void;
 		_xdr_result = (xdrproc_t) xdr_int;
-		local = (char *(*)(char *, struct svc_req *)) launchballp2_1_svc;
+		local = (bool_t (*) (char *, void *,  struct svc_req *))launchballp2_1_svc;
+		break;
+
+	case GETRACK2:
+		_xdr_argument = (xdrproc_t) xdr_int;
+		_xdr_result = (xdrproc_t) xdr_int;
+		local = (bool_t (*) (char *, void *,  struct svc_req *))getrack2_1_svc;
 		break;
 
 	default:
@@ -48,18 +56,22 @@ player2prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		svcerr_decode (transp);
 		return;
 	}
-	result = (*local)((char *)&argument, rqstp);
-	if (result != NULL && !svc_sendreply(transp, (xdrproc_t) _xdr_result, result)) {
+	retval = (bool_t) (*local)((char *)&argument, (void *)&result, rqstp);
+	if (retval > 0 && !svc_sendreply(transp, (xdrproc_t) _xdr_result, (char *)&result)) {
 		svcerr_systemerr (transp);
 	}
 	if (!svc_freeargs (transp, (xdrproc_t) _xdr_argument, (caddr_t) &argument)) {
 		fprintf (stderr, "%s", "unable to free arguments");
 		exit (1);
 	}
+	if (!player2prog_1_freeresult (transp, _xdr_result, (caddr_t) &result))
+		fprintf (stderr, "%s", "unable to free results");
+
 	return;
 }
 
-int register_player2_service()
+int
+register_player2_service (int argc, char **argv)
 {
 	register SVCXPRT *transp;
 
@@ -68,21 +80,23 @@ int register_player2_service()
 	transp = svcudp_create(RPC_ANYSOCK);
 	if (transp == NULL) {
 		fprintf (stderr, "%s", "cannot create udp service.");
-		return 0;
+		exit(1);
 	}
 	if (!svc_register(transp, PLAYER2PROG, PLAYER2VERS, player2prog_1, IPPROTO_UDP)) {
 		fprintf (stderr, "%s", "unable to register (PLAYER2PROG, PLAYER2VERS, udp).");
-		return 0;
+		exit(1);
 	}
 
 	transp = svctcp_create(RPC_ANYSOCK, 0, 0);
 	if (transp == NULL) {
 		fprintf (stderr, "%s", "cannot create tcp service.");
-		return 0;
+		exit(1);
 	}
 	if (!svc_register(transp, PLAYER2PROG, PLAYER2VERS, player2prog_1, IPPROTO_TCP)) {
 		fprintf (stderr, "%s", "unable to register (PLAYER2PROG, PLAYER2VERS, tcp).");
-		return 0;
+		exit(1);
 	}
-    return 1;
+
+	return 1;
+	/* NOTREACHED */
 }
