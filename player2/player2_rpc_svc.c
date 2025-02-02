@@ -20,11 +20,11 @@ static void
 player2prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		int getrack2_1_arg;
+		int getpaddle2_1_arg;
 	} argument;
 	union {
 		int launchballp2_1_res;
-		int getrack2_1_res;
+		int getpaddle2_1_res;
 	} result;
 	bool_t retval;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -41,10 +41,10 @@ player2prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		local = (bool_t (*) (char *, void *,  struct svc_req *))launchballp2_1_svc;
 		break;
 
-	case GETRACK2:
+	case GETPADDLE2:
 		_xdr_argument = (xdrproc_t) xdr_int;
 		_xdr_result = (xdrproc_t) xdr_int;
-		local = (bool_t (*) (char *, void *,  struct svc_req *))getrack2_1_svc;
+		local = (bool_t (*) (char *, void *,  struct svc_req *))getpaddle2_1_svc;
 		break;
 
 	default:

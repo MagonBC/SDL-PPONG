@@ -18,7 +18,7 @@ typedef struct Table
 {
     PPong_GraphicItem table;
     PPong_GraphicItem ball;
-    PPong_GraphicItem rack1, rack2;
+    PPong_GraphicItem paddle1, paddle2;
     PPong_GraphicItem net;
     PPong_GraphicItem topline, bottomline;
     PPong_GraphicItem rightline, leftline;    
@@ -38,7 +38,7 @@ typedef struct Game
     SDL_Surface * screen;
     PPong_Table table;
     PPong_Board board;
-    Mix_Chunk * rack_hit;
+    Mix_Chunk * paddle_hit;
     Mix_Chunk * touchline_hit;
     int * play, * p1, * p2;
 }PPong_Game;

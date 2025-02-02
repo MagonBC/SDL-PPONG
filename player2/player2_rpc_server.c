@@ -30,14 +30,14 @@ launchballp2_1_svc(void *argp, int *result, struct svc_req *rqstp)
 }
 
 bool_t
-getrack2_1_svc(int *argp, int *result, struct svc_req *rqstp)
+getpaddle2_1_svc(int *argp, int *result, struct svc_req *rqstp)
 {
     bool_t retval=1;
 
-    (*result) = (int)(game.table.rack2.position.x);
+    (*result) = (int)(game.table.paddle2.position.x);
 
     if(argp != NULL)
-        game.table.rack1.position.x = (*argp);
+        game.table.paddle1.position.x = (*argp);
 
     return retval;
 }

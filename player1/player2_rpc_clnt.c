@@ -19,9 +19,9 @@ launchballp2_1(void *argp, int *clnt_res, CLIENT *clnt)
 }
 
 enum clnt_stat 
-getrack2_1(int *argp, int *clnt_res, CLIENT *clnt)
+getpaddle2_1(int *argp, int *clnt_res, CLIENT *clnt)
 {
-        return (clnt_call(clnt, GETRACK2,
+        return (clnt_call(clnt, GETPADDLE2,
                 (xdrproc_t) xdr_int, (caddr_t) argp,
                 (xdrproc_t) xdr_int, (caddr_t) clnt_res,
                 TIMEOUT));

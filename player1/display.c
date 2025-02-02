@@ -51,14 +51,14 @@ game->table.ball.surface  = IMG_Load("data/ball.png");
 if(!game->table.ball.surface)
     return 0;
 
-game->table.rack1.surface = IMG_Load("data/rack.png");
+game->table.paddle1.surface = IMG_Load("data/paddle.png");
 
-if(!game->table.rack1.surface)
+if(!game->table.paddle1.surface)
     return 0;
 
-game->table.rack2.surface = IMG_Load("data/rack.png");
+game->table.paddle2.surface = IMG_Load("data/paddle.png");
 
-if(!game->table.rack2.surface)
+if(!game->table.paddle2.surface)
     return 0;
 
 /* The Score Board */
@@ -97,15 +97,15 @@ void set_graphicItems_positions(PPong_Game * game)
  game->table.bottomline.position.x  = 0;
  game->table.bottomline.position.y  = game->table.table.surface->h - 1;
 
- game->table.rack1.position.x = game->table.table.surface->w/2 - game->table.rack1.surface->w/2;
- game->table.rack1.position.y = game->table.table.surface->h - 
-                    game->table.rack1.surface->h -3 - game->table.ball.surface->h;
+ game->table.paddle1.position.x = game->table.table.surface->w/2 - game->table.paddle1.surface->w/2;
+ game->table.paddle1.position.y = game->table.table.surface->h -
+                    game->table.paddle1.surface->h -3 - game->table.ball.surface->h;
 
- game->table.rack2.position.x = game->table.table.surface->w/2 - game->table.rack2.surface->w/2;
- game->table.rack2.position.y =  3 + game->table.ball.surface->h;
+ game->table.paddle2.position.x = game->table.table.surface->w/2 - game->table.paddle2.surface->w/2;
+ game->table.paddle2.position.y =  3 + game->table.ball.surface->h;
 
  game->table.ball.position.x = game->table.table.surface->w/2 - game->table.ball.surface->w/2;
- game->table.ball.position.y = game->table.rack1.position.y - game->table.ball.surface->h;
+ game->table.ball.position.y = game->table.paddle1.position.y - game->table.ball.surface->h;
 
 }
 
@@ -151,8 +151,8 @@ int display(PPong_Game * game)
 
 /* Blit the table's graphic items on the table itself */  
   SDL_BlitSurface(game->table.ball.surface,       NULL, game->table.table.surface, &game->table.ball.position); 
-  SDL_BlitSurface(game->table.rack1.surface,      NULL, game->table.table.surface, &game->table.rack1.position);
-  SDL_BlitSurface(game->table.rack2.surface,      NULL, game->table.table.surface, &game->table.rack2.position);
+  SDL_BlitSurface(game->table.paddle1.surface,      NULL, game->table.table.surface, &game->table.paddle1.position);
+  SDL_BlitSurface(game->table.paddle2.surface,      NULL, game->table.table.surface, &game->table.paddle2.position);
   SDL_BlitSurface(game->table.rightline.surface,  NULL, game->table.table.surface, &game->table.rightline.position);
   SDL_BlitSurface(game->table.leftline.surface,   NULL, game->table.table.surface, &game->table.leftline.position);
   SDL_BlitSurface(game->table.topline.surface,    NULL, game->table.table.surface, &game->table.topline.position);
@@ -172,8 +172,8 @@ int display(PPong_Game * game)
  
 void free_video_memory( PPong_Game * game)
 {
-    SDL_FreeSurface(game->table.rack1.surface);
-    SDL_FreeSurface(game->table.rack2.surface);
+    SDL_FreeSurface(game->table.paddle1.surface);
+    SDL_FreeSurface(game->table.paddle2.surface);
     SDL_FreeSurface(game->table.ball.surface);
     SDL_FreeSurface(game->table.topline.surface);
     SDL_FreeSurface(game->table.bottomline.surface);

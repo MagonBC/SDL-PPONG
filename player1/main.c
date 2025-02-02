@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
  game.play = &play; // to not use malloc()!
  game.p1 = &p1;
  game.p2 = &p2;
- int rack1_x,rack2_x;
+ int paddle1_x,paddle2_x;
    
  char *ip = NULL;
  CLIENT * cl;
@@ -115,9 +115,9 @@ int main(int argc, char *argv[])
 
 /* sounds */
   Mix_OpenAudio(22050, AUDIO_U8, 1, 512);
-  game.rack_hit = Mix_LoadWAV("data/hit.wav");
+  game.paddle_hit = Mix_LoadWAV("data/hit.wav");
   game.touchline_hit = Mix_LoadWAV("data/mur.wav");
-  Mix_VolumeChunk(game.rack_hit, VOLUME);
+  Mix_VolumeChunk(game.paddle_hit, VOLUME);
   Mix_VolumeChunk(game.touchline_hit, VOLUME);
 	
 /* Keyboard & Mouse */
@@ -150,8 +150,8 @@ int main(int argc, char *argv[])
     }
 
 
-/* initial x coordinate of rack1 */
-  rack1_x = game.table.rack1.position.x;
+/* initial x coordinate of paddle1 */
+  paddle1_x = game.table.paddle1.position.x;
 
 /*
  * Every thing goes OK, Run the game and have fun :)
@@ -171,19 +171,19 @@ int main(int argc, char *argv[])
 
 	                switch(event.key.keysym.sym)
 		        {
-                         /* move rack1 to the right by 1 pixel */   
-			 case SDLK_RIGHT :     rack1_x += 1;
+                         /* move paddle1 to the right by 1 pixel */
+			 case SDLK_RIGHT :     paddle1_x += 1;
 		         break;
 
-                         /* move rack1 to the left by 1 pixel */
-			 case SDLK_LEFT  :     rack1_x -= 1;
+                         /* move paddle1 to the left by 1 pixel */
+			 case SDLK_LEFT  :     paddle1_x -= 1;
 			 break;
-             /* move rack2 to the right by 1 pixel */
-             case SDLK_v:    rack2_x += 1;
+             /* move paddle2 to the right by 1 pixel */
+             case SDLK_v:    paddle2_x += 1;
              break;
 
-             /* move rack2 to the left by 1 pixel */
-             case SDLK_x :    rack2_x -= 1;
+             /* move paddle2 to the left by 1 pixel */
+             case SDLK_x :    paddle2_x -= 1;
              break;
 
                          /* launch the ball: trigger the timer */
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
                              
                              if((game.table.ball.position.y +
                                  game.table.ball.surface->h)
-                                == game.table.rack1.position.y
+                                == game.table.paddle1.position.y
                                )
                              {
                                 /* First, launch the ball on player2 side */
@@ -230,20 +230,20 @@ int main(int argc, char *argv[])
         }
     }
     
-    /* update rack1 x position */
-    if( (game.table.rack1.position.x + game.table.rack1.surface->w) 
+    /* update paddle1 x position */
+    if( (game.table.paddle1.position.x + game.table.paddle1.surface->w)
             > (game.table.table.surface->w -5)
       )
-        rack1_x = game.table.table.surface->w -5 -game.table.rack1.surface->w;
+        paddle1_x = game.table.table.surface->w -5 -game.table.paddle1.surface->w;
     
-    if(game.table.rack1.position.x < 3)
-        rack1_x = 3;
+    if(game.table.paddle1.position.x < 3)
+        paddle1_x = 3;
     
-    game.table.rack1.position.x= rack1_x;
+    game.table.paddle1.position.x= paddle1_x;
 
     if (play_with_computer == 0)
     {
-      result = getrack2_1((int*)&game.table.rack1.position.x, clnt_res, cl);
+      result = getpaddle2_1((int*)&game.table.paddle1.position.x, clnt_res, cl);
       if (result != 0)
       {
           /* the ball on player2 side was not launched */
@@ -251,20 +251,20 @@ int main(int argc, char *argv[])
           continue;
       }else
       {
-          game.table.rack2.position.x= *clnt_res;
+          game.table.paddle2.position.x= *clnt_res;
       }
     }else
     {
-      /* update rack2 x position */
-      if( (game.table.rack2.position.x + game.table.rack2.surface->w)
+      /* update paddle2 x position */
+      if( (game.table.paddle2.position.x + game.table.paddle2.surface->w)
               > (game.table.table.surface->w -5)
           )
-          rack2_x=game.table.table.surface->w -5 -game.table.rack2.surface->w;
+          paddle2_x=game.table.table.surface->w -5 -game.table.paddle2.surface->w;
 
-      if(game.table.rack2.position.x < 3)
-          rack2_x = 3;
+      if(game.table.paddle2.position.x < 3)
+          paddle2_x = 3;
 
-      game.table.rack2.position.x = rack2_x;
+      game.table.paddle2.position.x = paddle2_x;
       }
       /* display the graphic items */
       display(&game);
@@ -287,7 +287,7 @@ if (play_with_computer == 0)
 
 /* close audio and free allocated sound chunks */  
   Mix_CloseAudio();
-  Mix_FreeChunk(game.rack_hit);
+  Mix_FreeChunk(game.paddle_hit);
   Mix_FreeChunk(game.touchline_hit);
     
   Mix_Quit();

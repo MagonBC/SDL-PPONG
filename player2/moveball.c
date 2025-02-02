@@ -8,17 +8,17 @@ Uint32 MoveBall(Uint32 interval, void * data)
     PPong_Game * game = (PPong_Game *)data;
      
      int BallCenter   = game->table.ball.position.x + game->table.ball.surface->w/2;
-     int limit_rack2  = game->table.rack2.position.x + game->table.rack2.surface->w;
-     int limit_rack1  = game->table.rack1.position.x + game->table.rack1.surface->w;
+     int limit_paddle2  = game->table.paddle2.position.x + game->table.paddle2.surface->w;
+     int limit_paddle1  = game->table.paddle1.position.x + game->table.paddle1.surface->w;
      
-     int low = game->table.rack1.position.y;
-     int top = game->table.rack2.surface->h + game->table.rack2.position.y;
+     int low = game->table.paddle1.position.y;
+     int top = game->table.paddle2.surface->h + game->table.paddle2.position.y;
      int right = game->table.table.surface->w - game->table.ball.surface->w;
      
-     int RSection1 = 1*game->table.rack1.surface->w/5;     
-     int RSection2 = 2*game->table.rack1.surface->w/5;     
-     int RSection3 = 3*game->table.rack1.surface->w/5;     
-     int RSection4 = 4*game->table.rack1.surface->w/5;     
+     int RSection1 = 1*game->table.paddle1.surface->w/5;
+     int RSection2 = 2*game->table.paddle1.surface->w/5;
+     int RSection3 = 3*game->table.paddle1.surface->w/5;
+     int RSection4 = 4*game->table.paddle1.surface->w/5;
                                          
      int tolerence1 = game->table.ball.surface->w/2;
      int tolerence2 = game->table.ball.surface->w/2;
@@ -26,32 +26,32 @@ Uint32 MoveBall(Uint32 interval, void * data)
    if (game->table.ball.position.y  + game->table.ball.surface->h == low)
    {
  
-     if((BallCenter <= limit_rack1  + tolerence1)&&(BallCenter > game->table.rack1.position.x + RSection4 ))
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens = 1;}
-     if((BallCenter <= game->table.rack1.position.x + RSection4 )&&(BallCenter > game->table.rack1.position.x + RSection3 ))
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens = 2;}
-     if((BallCenter >= game->table.rack1.position.x + RSection2 )&&(BallCenter <= game->table.rack1.position.x + RSection3))
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens = 3;}
-     if((BallCenter >= game->table.rack1.position.x + RSection1 )&&(BallCenter < game->table.rack1.position.x +RSection2))   
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens = 4;}
-     if((BallCenter < game->table.rack1.position.x + RSection1)&&(BallCenter >= game->table.rack1.position.x - tolerence1))  	
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens = 5;}
+     if((BallCenter <= limit_paddle1  + tolerence1)&&(BallCenter > game->table.paddle1.position.x + RSection4 ))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens = 1;}
+     if((BallCenter <= game->table.paddle1.position.x + RSection4 )&&(BallCenter > game->table.paddle1.position.x + RSection3 ))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens = 2;}
+     if((BallCenter >= game->table.paddle1.position.x + RSection2 )&&(BallCenter <= game->table.paddle1.position.x + RSection3))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens = 3;}
+     if((BallCenter >= game->table.paddle1.position.x + RSection1 )&&(BallCenter < game->table.paddle1.position.x +RSection2))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens = 4;}
+     if((BallCenter < game->table.paddle1.position.x + RSection1)&&(BallCenter >= game->table.paddle1.position.x - tolerence1))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens = 5;}
      
    }
 
 
    if (game->table.ball.position.y == top)
    {
-     if((BallCenter <= limit_rack2 + tolerence2)&&(BallCenter > game->table.rack2.position.x + RSection4))      
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens = 6;}
-     if((BallCenter <= game->table.rack2.position.x + RSection4 )&&(BallCenter > game->table.rack2.position.x + RSection3 )) 
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens = 7;}
-     if((BallCenter >= game->table.rack2.position.x + RSection2 )&&(BallCenter <= game->table.rack2.position.x + RSection3)) 
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens = 8;}
-     if((BallCenter >= game->table.rack2.position.x + RSection1 )&&(BallCenter < game->table.rack2.position.x + RSection2))  
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens = 9;}
-     if((BallCenter < game->table.rack2.position.x + RSection1)&&(BallCenter >= game->table.rack2.position.x - tolerence2))  
-	{Mix_PlayChannel(2, game->rack_hit, 0); sens =10;}
+     if((BallCenter <= limit_paddle2 + tolerence2)&&(BallCenter > game->table.paddle2.position.x + RSection4))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens = 6;}
+     if((BallCenter <= game->table.paddle2.position.x + RSection4 )&&(BallCenter > game->table.paddle2.position.x + RSection3 ))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens = 7;}
+     if((BallCenter >= game->table.paddle2.position.x + RSection2 )&&(BallCenter <= game->table.paddle2.position.x + RSection3))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens = 8;}
+     if((BallCenter >= game->table.paddle2.position.x + RSection1 )&&(BallCenter < game->table.paddle2.position.x + RSection2))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens = 9;}
+     if((BallCenter < game->table.paddle2.position.x + RSection1)&&(BallCenter >= game->table.paddle2.position.x - tolerence2))
+	{Mix_PlayChannel(2, game->paddle_hit, 0); sens =10;}
    }
 
    if(game->table.ball.position.x == right) {Mix_PlayChannel(2, game->touchline_hit, 0);}
@@ -62,9 +62,9 @@ Uint32 MoveBall(Uint32 interval, void * data)
         
 	(*(game->p2)) ++;
 	game->table.ball.position.x = game->table.table.surface->w/2 -game->table.ball.surface->w/2;
-	game->table.ball.position.y = game->table.rack2.position.y + game->table.rack2.surface->h;
-	game->table.rack1.position.x = game->table.table.surface->w/2 - game->table.rack1.surface->w/2;
-	game->table.rack2.position.x = game->table.table.surface->w/2 - game->table.rack2.surface->w/2;
+	game->table.ball.position.y = game->table.paddle2.position.y + game->table.paddle2.surface->h;
+	game->table.paddle1.position.x = game->table.table.surface->w/2 - game->table.paddle1.surface->w/2;
+	game->table.paddle2.position.x = game->table.table.surface->w/2 - game->table.paddle2.surface->w/2;
 	SDL_SetTimer(0, NULL);
         
    }
@@ -75,9 +75,9 @@ Uint32 MoveBall(Uint32 interval, void * data)
 	sens = 0;
 	(*(game->p1)) ++;
 	game->table.ball.position.x = game->table.table.surface->w/2 -game->table.ball.surface->w/2;
-	game->table.ball.position.y = game->table.rack1.position.y - game->table.ball.surface->h;
-	game->table.rack1.position.x = game->table.table.surface->w/2 - game->table.rack1.surface->w/2;
-	game->table.rack2.position.x = game->table.table.surface->w/2 - game->table.rack2.surface->w/2;
+	game->table.ball.position.y = game->table.paddle1.position.y - game->table.ball.surface->h;
+	game->table.paddle1.position.x = game->table.table.surface->w/2 - game->table.paddle1.surface->w/2;
+	game->table.paddle2.position.x = game->table.table.surface->w/2 - game->table.paddle2.surface->w/2;
 	SDL_SetTimer(0, NULL);
         
    }
@@ -95,7 +95,7 @@ Uint32 MoveBall(Uint32 interval, void * data)
 	case -1 :   game->table.ball.position.x-= BDIRECTION;
 		    game->table.ball.position.y-= BDIRECTION;
 	            
-                    if((game->table.ball.position.y == top)&&(BallCenter<= limit_rack2 + tolerence1)&&(BallCenter> game->table.rack2.position.x - tolerence1))
+                    if((game->table.ball.position.y == top)&&(BallCenter<= limit_paddle2 + tolerence1)&&(BallCenter> game->table.paddle2.position.x - tolerence1))
 			sens = 10;
 
         break; 
@@ -104,18 +104,18 @@ Uint32 MoveBall(Uint32 interval, void * data)
 		   if(game->table.ball.position.x == right)
 			sens = -2;
 		     
-		   if((game->table.ball.position.y == top)&&(BallCenter<= limit_rack2 + tolerence1)&&(BallCenter> game->table.rack2.position.x - tolerence1))
+		   if((game->table.ball.position.y == top)&&(BallCenter<= limit_paddle2 + tolerence1)&&(BallCenter> game->table.paddle2.position.x - tolerence1))
 			sens = 20;
 					     		    
         break;
         case -2 :   game->table.ball.position.x-= BDIRECTION;
 		    game->table.ball.position.y-= 2*BDIRECTION;
-		    if((game->table.ball.position.y == top)&&(BallCenter<= limit_rack2 + tolerence1)&&(BallCenter> game->table.rack2.position.x - tolerence1))
+		    if((game->table.ball.position.y == top)&&(BallCenter<= limit_paddle2 + tolerence1)&&(BallCenter> game->table.paddle2.position.x - tolerence1))
 			sens = 20;
 			
 	break;
 	case 3 :   game->table.ball.position.y -= 2*BDIRECTION;
-        if((game->table.ball.position.y == game->table.rack2.position.y + game->table.rack2.surface->h)&&(BallCenter< limit_rack2 + tolerence1)&&(BallCenter> game->table.rack2.position.x - tolerence1))
+        if((game->table.ball.position.y == game->table.paddle2.position.y + game->table.paddle2.surface->h)&&(BallCenter< limit_paddle2 + tolerence1)&&(BallCenter> game->table.paddle2.position.x - tolerence1))
 		      sens = -3;
 
         break;
@@ -124,13 +124,13 @@ Uint32 MoveBall(Uint32 interval, void * data)
 		    if(game->table.ball.position.x == 0)
 			sens = -4;
 		      
-		    if((game->table.ball.position.y == top)&&(BallCenter<= limit_rack2 + tolerence1)&&(BallCenter>= game->table.rack2.position.x - tolerence1))
+		    if((game->table.ball.position.y == top)&&(BallCenter<= limit_paddle2 + tolerence1)&&(BallCenter>= game->table.paddle2.position.x - tolerence1))
 			sens = 40; 
 		 
         break;  
 	case -4 :   game->table.ball.position.x += BDIRECTION;
 		    game->table.ball.position.y -= 2*BDIRECTION ;
-		    if((game->table.ball.position.y == top)&&(BallCenter<= limit_rack2 + tolerence1)&&(BallCenter>= game->table.rack2.position.x - tolerence1))
+		    if((game->table.ball.position.y == top)&&(BallCenter<= limit_paddle2 + tolerence1)&&(BallCenter>= game->table.paddle2.position.x - tolerence1))
 			sens = 40;
    
         break;
@@ -143,7 +143,7 @@ Uint32 MoveBall(Uint32 interval, void * data)
         break;
 	case -5 :   game->table.ball.position.x += BDIRECTION;
 		    game->table.ball.position.y -= BDIRECTION;
-	            if((game->table.ball.position.y == top)&&(BallCenter<= limit_rack2 + tolerence1)&&(BallCenter>= game->table.rack2.position.x - tolerence1))
+	            if((game->table.ball.position.y == top)&&(BallCenter<= limit_paddle2 + tolerence1)&&(BallCenter>= game->table.paddle2.position.x - tolerence1))
 		      sens = 50;
 
 	break;                                               
@@ -155,7 +155,7 @@ Uint32 MoveBall(Uint32 interval, void * data)
         break;
 	case -6 :   game->table.ball.position.x -= BDIRECTION;
 		    game->table.ball.position.y += BDIRECTION;
-		 if((game->table.ball.position.y + game->table.ball.surface->w == low )&&(BallCenter>= game->table.rack1.position.x -tolerence2)&&(BallCenter<= limit_rack1  + tolerence2))
+		 if((game->table.ball.position.y + game->table.ball.surface->w == low )&&(BallCenter>= game->table.paddle1.position.x -tolerence2)&&(BallCenter<= limit_paddle1  + tolerence2))
 		      sens = 60;
 		     
         break;
@@ -164,18 +164,18 @@ Uint32 MoveBall(Uint32 interval, void * data)
 		    if(game->table.ball.position.x == right)
 		      sens = -7;
 		  
-	       	 if((game->table.ball.position.y + game->table.ball.surface->w == low )&&(BallCenter>= game->table.rack1.position.x -tolerence2)&&(BallCenter<= limit_rack1  + tolerence2))
+	       	 if((game->table.ball.position.y + game->table.ball.surface->w == low )&&(BallCenter>= game->table.paddle1.position.x -tolerence2)&&(BallCenter<= limit_paddle1  + tolerence2))
 		     sens = 70;
 		    
 	break;
 	case -7 :    game->table.ball.position.x -= BDIRECTION;
 		     game->table.ball.position.y += 2*BDIRECTION;
-		 if((game->table.ball.position.y + game->table.ball.surface->w == low )&&(BallCenter>= game->table.rack1.position.x -tolerence2)&&(BallCenter<= limit_rack1  + tolerence2))
+		 if((game->table.ball.position.y + game->table.ball.surface->w == low )&&(BallCenter>= game->table.paddle1.position.x -tolerence2)&&(BallCenter<= limit_paddle1  + tolerence2))
 		       sens = 70;
 	              
         break;
 	case 8 :   game->table.ball.position.y += 2*BDIRECTION;
-	if((game->table.ball.position.y + game->table.ball.surface->w == game->table.rack1.position.y)&&(BallCenter>= game->table.rack1.position.x - tolerence2)&&(BallCenter<= limit_rack1  +tolerence2))
+	if((game->table.ball.position.y + game->table.ball.surface->w == game->table.paddle1.position.y)&&(BallCenter>= game->table.paddle1.position.x - tolerence2)&&(BallCenter<= limit_paddle1  +tolerence2))
 		     sens = -8;
 		      
         break;
@@ -184,13 +184,13 @@ Uint32 MoveBall(Uint32 interval, void * data)
 		if(game->table.ball.position.x == 0)                                          
 	 	  sens = -9;
 		     
-		if((game->table.ball.position.y +game->table.ball.surface->h == low)&&(BallCenter>= game->table.rack1.position.x - tolerence2)&&(game->table.ball.position.x<= limit_rack1 + tolerence2))
+		if((game->table.ball.position.y +game->table.ball.surface->h == low)&&(BallCenter>= game->table.paddle1.position.x - tolerence2)&&(game->table.ball.position.x<= limit_paddle1 + tolerence2))
 		  sens= 90;
 		      		  
         break;
 	case -9 :  game->table.ball.position.x+= BDIRECTION;
 		    game->table.ball.position.y+= 2*BDIRECTION;
-		if((game->table.ball.position.y +game->table.ball.surface->h == low)&&(BallCenter>= game->table.rack1.position.x - tolerence2)&&(game->table.ball.position.x<= limit_rack1 + tolerence2))
+		if((game->table.ball.position.y +game->table.ball.surface->h == low)&&(BallCenter>= game->table.paddle1.position.x - tolerence2)&&(game->table.ball.position.x<= limit_paddle1 + tolerence2))
 		  sens= 90;
 		      
 	break; 
@@ -203,7 +203,7 @@ Uint32 MoveBall(Uint32 interval, void * data)
         break;
 	case -10 :  game->table.ball.position.x+= BDIRECTION;
 		    game->table.ball.position.y+= BDIRECTION;
-	       if((game->table.ball.position.y +game->table.ball.surface->h == low)&&(BallCenter>= game->table.rack1.position.x - tolerence2)&&(game->table.ball.position.x<= limit_rack1  + tolerence2))
+	       if((game->table.ball.position.y +game->table.ball.surface->h == low)&&(BallCenter>= game->table.paddle1.position.x - tolerence2)&&(game->table.ball.position.x<= limit_paddle1  + tolerence2))
 	         sens= 100;
 				 
 	break;
