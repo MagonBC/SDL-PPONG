@@ -1,6 +1,12 @@
 player1/*.o
 player1/player1
+player1/rpc/*
+!player1/rpc/*.x
+
 player2/*.o
 player2/player2
+player2/rpc/*
+!player2/rpc/*.x
+
 *.iml
 .idea
