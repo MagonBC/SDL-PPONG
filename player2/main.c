@@ -25,6 +25,8 @@ Web Site: http://issamabd.com
 #include <errno.h>
 #include <string.h> /* strcpy() */
 #include <getopt.h> /* to scan command options */
+#include <unistd.h>
+#include <pthread.h>
 
 #include "display.h"
 #include "moveball.h"
@@ -37,6 +39,11 @@ Web Site: http://issamabd.com
 
 #include "player1_rpc.h"
 #include "player2_rpc.h"
+
+pthread_t  thread_1;
+void *run_svc(void *arg) {
+	svc_run();
+}
 
 static int SDLlibs_init();
 static void scan_options(int argc, char *argv[], char ** ip);
@@ -65,14 +72,9 @@ int main(int argc, char *argv[])
  int rack2_x;
    
  char *ip = NULL;
-
- fd_set readfds;
  CLIENT * cl;
- int dtbsz, ready;
- 
- struct timeval TIMEOUT = {1,0};
- int *result = (int*)malloc(sizeof (int));
- 
+ enum clnt_stat result;
+ int *clnt_res = (int*)malloc(sizeof (int));
 
 /* First, we scan command options (refer to GNU getopt.h API) */ 
   scan_options(argc, argv, &ip);
@@ -80,12 +82,6 @@ int main(int argc, char *argv[])
 /* verify that player2 IP was scanned */
   if(!ip)
       print_usage(argv[0], stderr, EXIT_FAILURE);
-
-/* 
- * get descriptor table size: the maximum number of files 
- * a process can have open. 
- */ 
-  dtbsz = getdtablesize ();
 
 /*
  * Associates prognum and versnum with the service dispatch procedure and 
@@ -97,6 +93,8 @@ int main(int argc, char *argv[])
 
   if(!register_player2_service())
     return EXIT_FAILURE;
+
+ int ret = pthread_create(&thread_1, NULL, run_svc, NULL);
 
 /* Create RPC client to connect to player1 */
   cl = clnt_create(ip, PLAYER1PROG, PLAYER1VERS, "tcp");            
@@ -179,19 +177,18 @@ while(play)
                                  game.table.rack2.surface->h)
                                )
                              {
-                                /* First, launch the ball on player1 side */
-                                result = launchballp1_1((void*)0, cl);
-                                if (result == (int *) NULL) 
+                                /* First, launch the ball on player2 side */
+                                result = launchballp1_1((void*)0, clnt_res, cl);
+                                if (result != 0)
                                 {
-                                    /* the ball on player1 side was not launched */
-                                    //clnt_perror (cl, "call failed");
+                                    /* the ball on player2 side was not launched */
+                                    clnt_perror (cl, "call failed");
                                     continue;
                                 }else
                                 {
                                     SDL_RemoveTimer(timer);
                                     timer = SDL_AddTimer(BSPEED ,MoveBall, &game);
-                                }
-	
+                                }	
                              }
                             
                          break;
@@ -221,46 +218,12 @@ while(play)
         rack2_x = 3;
     
     game.table.rack2.position.x = rack2_x;
-    
-    result = getrack1_1((int*)&game.table.rack2.position.x, cl);
-    
-    if(result != NULL)
-        game.table.rack1.position.x = (*result);
-    
+
     /* display the graphic items */
-    free_video_memory(&game);
-    create_game_graphicItems(&game);
     display(&game);
-    
-    /* handles RPC requests asynchronously instead of using svc_run(). */
-    {
-        /* svc_fdset: indicates the read-file descriptor bit mask of the 
-         * remote procedure call (RPC) server. 
-         */
-            readfds = svc_fdset;
-            
-        /* a select system call with a not NULL wait interval is asynchronous */    
-        ready = select (dtbsz, &readfds, NULL, NULL, &TIMEOUT);
-    
-        if(ready >= 1)
-        {
-            /* serve player1's request */
-            svc_getreqset (&readfds);
-        }
-        /*  timeout expires before anything interesting happens! */
-        else if (ready == 0)
-            continue;
-        /* critical error */
-        else
-        {
-            if (errno != EBADF)
-                continue;
-                
-            play = 0; 
-            perror ( "select");
-        }
-    }
 }
+
+ pthread_cancel(thread_1);
 
 /* destroys the RPC client's (player2) handle */
   clnt_destroy (cl);
