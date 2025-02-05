@@ -1,12 +1,16 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
-#define RSPEED        10
-#define BSPEED        5
+#define window_WIDTH 660
+#define window_HEIGHT 700
+
+#define RSPEED       10
+#define BSPEED       10
 #define VOLUME      100 	/* Volume 0..128 */
+#define PAUSE_MS     16      /* 16ms => 60 FPS */
 
 typedef struct GraphicItem
 {
@@ -21,7 +25,8 @@ typedef struct Table
     PPong_GraphicItem paddle1, paddle2;
     PPong_GraphicItem net;
     PPong_GraphicItem topline, bottomline;
-    PPong_GraphicItem rightline, leftline;    
+    PPong_GraphicItem rightline, leftline;
+    SDL_Texture * texture;
 }PPong_Table;
 
 typedef struct Board
@@ -31,11 +36,13 @@ typedef struct Board
     PPong_GraphicItem time;
     PPong_GraphicItem score;
     TTF_Font *police;
+    SDL_Texture * texture;
 }PPong_Board;
 
 typedef struct Game
 {
-    SDL_Surface * screen;
+    SDL_Window * window;
+    SDL_Renderer * renderer;
     PPong_Table table;
     PPong_Board board;
     Mix_Chunk * paddle_hit;

@@ -101,9 +101,13 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
 
 /* graphic Interface creation */
-  game.screen     = SDL_SetVideoMode(660, 700, BITBIXEL,
-            SDL_HWSURFACE | SDL_DOUBLEBUF /*| SDL_FULLSCREEN*/);
+  game.window = SDL_CreateWindow("Player 1 ( P1 )",
+                          SDL_WINDOWPOS_CENTERED,
+                          SDL_WINDOWPOS_CENTERED,
+                          window_WIDTH, window_HEIGHT,
+                          0);
 
+  game.renderer = SDL_CreateRenderer(game.window, -1, 0);
 
   if(!create_game_graphicItems(&game))
     exit(EXIT_FAILURE);
@@ -121,8 +125,6 @@ int main(int argc, char *argv[])
   Mix_VolumeChunk(game.touchline_hit, VOLUME);
 	
 /* Keyboard & Mouse */
-  SDL_WM_SetCaption("Player 1 ( P1 )",NULL);
-  SDL_EnableKeyRepeat(BSPEED, 0);
   SDL_ShowCursor(0);
 
 /* display the graphic interface for the first time */  
@@ -131,12 +133,9 @@ int main(int argc, char *argv[])
 /* Begin serving player2 requests */
   int ret = pthread_create(&thread_1, NULL, run_svc, NULL);
 
-/* wait before connecting to player2 */
-  system("sleep 2s");
-
 /* Create RPC client to connect to player2 */
-  cl = clnt_create(ip, PLAYER2PROG, PLAYER2VERS, "tcp");            
-  if (cl == NULL) 
+  cl = clnt_create(ip, PLAYER2PROG, PLAYER2VERS, "tcp");
+  if (cl == NULL)
     {
         /*
          * Couldn't establish connection with player1 for RPC calls: play with computer!
@@ -148,7 +147,6 @@ int main(int argc, char *argv[])
           pthread_cancel(thread_1);
           play_with_computer = 1;
     }
-
 
 /* initial x coordinate of paddle1 */
   paddle1_x = game.table.paddle1.position.x;
@@ -172,23 +170,23 @@ int main(int argc, char *argv[])
 	                switch(event.key.keysym.sym)
 		        {
                          /* move paddle1 to the right by 1 pixel */
-			 case SDLK_RIGHT :     paddle1_x += 1;
+			 case SDLK_RIGHT :     paddle1_x += RSPEED;
 		         break;
 
                          /* move paddle1 to the left by 1 pixel */
-			 case SDLK_LEFT  :     paddle1_x -= 1;
+			 case SDLK_LEFT  :     paddle1_x -= RSPEED;
 			 break;
              /* move paddle2 to the right by 1 pixel */
-             case SDLK_v:    paddle2_x += 1;
+             case SDLK_v:    paddle2_x += RSPEED;
              break;
 
              /* move paddle2 to the left by 1 pixel */
-             case SDLK_x :    paddle2_x -= 1;
+             case SDLK_x :    paddle2_x -= RSPEED;
              break;
 
                          /* launch the ball: trigger the timer */
 			 case SDLK_SPACE:
-                             
+
                              if(((game.table.ball.position.y +
                                  game.table.ball.surface->h)
                                 == game.table.paddle1.position.y
@@ -204,7 +202,7 @@ int main(int argc, char *argv[])
                                   if (result != 0)
                                   {
                                       /* the ball on player2 side was not launched */
-                                      clnt_perror (cl, "call failed");
+                                     clnt_perror (cl, "call failed");
                                       continue;
                                   }else
                                   {
@@ -217,29 +215,29 @@ int main(int argc, char *argv[])
                                       timer = SDL_AddTimer(BSPEED ,MoveBall, &game);
                                 }
                              }
-                             
+
 			 break;
-			
+
 			 case SDLK_q:	play = 0;
 
-                         break;
+             break;
 
 			 default:
 			 break;
 		      }
 
-            break;
-            default :
-            break;
+           break;
+           default :
+           break;
         }
     }
-    
+
     /* update paddle1 x position */
     if( (game.table.paddle1.position.x + game.table.paddle1.surface->w)
             > (game.table.table.surface->w -5)
       )
         paddle1_x = game.table.table.surface->w -5 -game.table.paddle1.surface->w;
-    
+
     if(game.table.paddle1.position.x < 3)
         paddle1_x = 3;
     
@@ -250,7 +248,7 @@ int main(int argc, char *argv[])
       result = getpaddle2_1((int*)&game.table.paddle1.position.x, clnt_res, cl);
       if (result != 0)
       {
-          /* the ball on player2 side was not launched */
+          // the ball on player2 side was not launched
           clnt_perror (cl, "call failed");
           continue;
       }else
@@ -259,7 +257,7 @@ int main(int argc, char *argv[])
       }
     }else
     {
-      /* update paddle2 x position */
+      // update paddle2 x position
       if( (game.table.paddle2.position.x + game.table.paddle2.surface->w)
               > (game.table.table.surface->w -5)
           )
@@ -270,16 +268,22 @@ int main(int argc, char *argv[])
 
       game.table.paddle2.position.x = paddle2_x;
       }
+
       /* display the graphic items */
       display(&game);
+
+     /* Cap frame rate !!!! */
+     SDL_Delay(PAUSE_MS);
   }
 
-if (play_with_computer == 0)
-  pthread_cancel(thread_1);
-
 /* destroys the RPC client's (player1) handle */
-  clnt_destroy (cl);
-  
+if (play_with_computer == 0)
+ {
+    pthread_cancel(thread_1);
+    clnt_destroy (cl);
+  }
+  free(clnt_res);
+
 /* remove timer and stop the ball */  
   SDL_RemoveTimer(timer);
 
