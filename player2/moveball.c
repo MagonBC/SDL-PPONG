@@ -2,7 +2,7 @@
 # include "moveball.h"
 
 static int sens;
-
+extern SDL_TimerID timer;
 Uint32 MoveBall(Uint32 interval, void * data)
 {
     PPong_Game * game = (PPong_Game *)data;
@@ -65,7 +65,7 @@ Uint32 MoveBall(Uint32 interval, void * data)
 	game->table.ball.position.y = game->table.paddle2.position.y + game->table.paddle2.surface->h;
 	game->table.paddle1.position.x = game->table.table.surface->w/2 - game->table.paddle1.surface->w/2;
 	game->table.paddle2.position.x = game->table.table.surface->w/2 - game->table.paddle2.surface->w/2;
-	SDL_SetTimer(0, NULL);
+	SDL_RemoveTimer(timer);
         
    }
 
@@ -78,7 +78,7 @@ Uint32 MoveBall(Uint32 interval, void * data)
 	game->table.ball.position.y = game->table.paddle1.position.y - game->table.ball.surface->h;
 	game->table.paddle1.position.x = game->table.table.surface->w/2 - game->table.paddle1.surface->w/2;
 	game->table.paddle2.position.x = game->table.table.surface->w/2 - game->table.paddle2.surface->w/2;
-	SDL_SetTimer(0, NULL);
+	SDL_RemoveTimer(timer);
         
    }
   

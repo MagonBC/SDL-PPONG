@@ -114,8 +114,14 @@ int main(int argc, char *argv[])
       exit(EXIT_FAILURE);
 
 /* graphic Interface creation */
-  game.screen   = SDL_SetVideoMode(660, 700, BITBIXEL,
-                                 SDL_HWSURFACE | SDL_DOUBLEBUF /*| SDL_FULLSCREEN*/);
+/* graphic Interface creation */
+  game.window = SDL_CreateWindow("Player 1 ( P1 )",
+                          SDL_WINDOWPOS_CENTERED,
+                          SDL_WINDOWPOS_CENTERED,
+                          window_WIDTH, window_HEIGHT,
+                          0);
+
+  game.renderer = SDL_CreateRenderer(game.window, -1, 0);
 
   if(!create_game_graphicItems(&game))
       exit(EXIT_FAILURE);
@@ -133,8 +139,6 @@ int main(int argc, char *argv[])
   Mix_VolumeChunk(game.touchline_hit, VOLUME);
 	
 /* Keyboard & Mouse */
-  SDL_WM_SetCaption("Player 2 ( P2 )",NULL);
-  SDL_EnableKeyRepeat(BSPEED, 0);
   SDL_ShowCursor(0);
 
 /* display the graphic interface for the first time */ 
@@ -162,11 +166,11 @@ while(play)
 	                switch(event.key.keysym.sym)
 		        {
                             /* move paddle2 to the right by 1 pixel */
-                            case SDLK_RIGHT:    paddle2_x += 1;
+                            case SDLK_RIGHT:    paddle2_x += RSPEED;
                             break;
 
                             /* move paddle2 to the left by 1 pixel */
-                            case SDLK_LEFT :    paddle2_x -= 1;
+                            case SDLK_LEFT :    paddle2_x -= RSPEED;
                             break;
 
                             /* launch the ball: trigger the timer */
@@ -221,12 +225,16 @@ while(play)
 
     /* display the graphic items */
     display(&game);
+
+    /* Cap frame rate !!!! */
+    SDL_Delay(PAUSE_MS);
 }
 
  pthread_cancel(thread_1);
 
 /* destroys the RPC client's (player2) handle */
-  clnt_destroy (cl);
+ // clnt_destroy (cl);
+    free(clnt_res);
   
 /* remove timer and stop the ball */  
   SDL_RemoveTimer(timer);
